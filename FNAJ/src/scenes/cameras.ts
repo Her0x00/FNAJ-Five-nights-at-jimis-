@@ -1,7 +1,5 @@
 import Phaser from "phaser";
 
-
-
 export class CameraScene extends Phaser.Scene {
     constructor() {
         super({ key: "CameraScene" });
