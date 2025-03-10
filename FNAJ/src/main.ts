@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { MainScene } from "./scenes/main.ts";
 import { OfficeScene } from "./scenes/office.ts";
 import { CameraScene } from "./scenes/cameras.ts";
+import { Camera1Scene } from "./scenes/camera1Scene.ts";
 
 // Select the #app div
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -17,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
     height: 900,
     parent: "game-container",
     backgroundColor: "#444",
-    scene: [MainScene, OfficeScene, CameraScene], // Load all scenes
+    scene: [MainScene, OfficeScene, CameraScene, Camera1Scene], // Load all scenes
 };
 
 // Initialize the game
