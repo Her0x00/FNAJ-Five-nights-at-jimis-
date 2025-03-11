@@ -1,7 +1,8 @@
 import Phaser from "phaser";
-import { Camera1Scene } from "./camScenes/camera1Scene";
 
 export class CameraScene extends Phaser.Scene {
+    state: GameState;
+    
     constructor() {
         super({ key: "CameraScene" });
     }
@@ -14,7 +15,8 @@ export class CameraScene extends Phaser.Scene {
         this.load.image("cam3", "assets/cam3.png");
         this.load.image("cam4", "assets/cam4.png");
         this.load.image("cam5", "assets/cam5.png");
-        
+
+        this.state = this.registry.get("GameState");
     }
 
     create() {
@@ -52,7 +54,7 @@ export class CameraScene extends Phaser.Scene {
         // }
     }
 
-    update() {
-
+    update(time: number, delta: number): void {
+        
     }
 }
