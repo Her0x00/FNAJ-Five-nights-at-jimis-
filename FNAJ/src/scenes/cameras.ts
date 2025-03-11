@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Camera1Scene } from "./camScenes/camera1Scene";
 
 export class CameraScene extends Phaser.Scene {
     constructor() {
@@ -26,14 +27,21 @@ export class CameraScene extends Phaser.Scene {
             this.scene.start("OfficeScene");
         });
 
-        for(let i = 1; i <= 5; i++){
-            this.input.keyboard!.on(`keydown-1`, () => {
-                this.scene.start(`camera1Scene`)
-            }) 
-        }
 
         this.input.keyboard.on("keydown", (event) => {
-            console.log(`Key pressed: ${event.key}`);
+            if (!isNaN(event.key)) {  // Check if the key is a number
+                console.log(`Key pressed: ${event.key}`);
+                if(event.key <= 5) {
+                    this.add.image(500, 500, `assets/cam${event.key}.png`);
+                }
+                else {
+                    console.log("there is no more cams")
+                }
+            }
+            else {
+                console.log('it has to be a number')
+            }
+        
         });
         
 
