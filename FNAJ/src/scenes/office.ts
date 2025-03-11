@@ -1,8 +1,14 @@
 import Phaser  from "phaser";
+import GameState from "../gameState";
 
 export class OfficeScene extends Phaser.Scene {
+    state: GameState;
+
     constructor() {
         super({ key: "OfficeScene" });
+
+        this.registry.set("GameState", new GameState());
+        this.state = this.registry.get("GameState");
     }
 
     preload() {
@@ -20,5 +26,9 @@ export class OfficeScene extends Phaser.Scene {
         this.input.keyboard.once("keydown-C", () => {
             this.scene.start("CameraScene");
         });
+    }
+
+    update(time: number, delta: number): void {
+        this.state.tick(delta);
     }
 }
