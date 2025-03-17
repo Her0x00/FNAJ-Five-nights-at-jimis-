@@ -14,7 +14,7 @@
 const ENEMY_MAX_DIFFICULTY: number = 20;
 
 export class Enemy {
-    AttackPath: Array<object>;
+    AttackPath: object;
     AttackState: object;
 
     Difficulty: number;
@@ -73,8 +73,25 @@ class Enemy1 extends Enemy {
         
         this.SetDifficulty(4);
 
+
+        /* test rut*/
         this.AttackPath = [
-            /* bla bla bla linjär path dem gar runt igenom */
+            {
+                position: "cam1",
+                recallChance: 0,
+            },
+            {
+                position: "cam2",
+                recallChance: 0.05,
+            },
+            {
+                position: "cam3",
+                recallChance: 0.10,
+            },
+            {
+                position: "cam4",
+                recallChance: 0.50
+            }
         ]
     }
 
