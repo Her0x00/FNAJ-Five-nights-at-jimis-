@@ -3,7 +3,6 @@ import Phaser from "phaser";
 import { MainScene } from "./scenes/main.ts";
 import { OfficeScene } from "./scenes/office.ts";
 import { CameraScene } from "./scenes/cameras.ts";
-// cam scenes
 import { Camera1Scene } from "./scenes/camScenes/camera1scene.ts";
 import { Camera2Scene } from "./scenes/camScenes/camera2scene.ts";
 import { Camera3Scene } from "./scenes/camScenes/camera3scene.ts";
@@ -26,7 +25,12 @@ const config: Phaser.Types.Core.GameConfig = {
     scene: [
         MainScene, 
         OfficeScene, 
-        CameraScene, 
+        CameraScene,
+        Camera1Scene,
+        Camera2Scene,
+        Camera3Scene,
+        Camera4Scene,
+        Camera5Scene
     ], // Load all scenes
 };
 

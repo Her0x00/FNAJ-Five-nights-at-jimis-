@@ -30,13 +30,13 @@ export class CameraScene extends Phaser.Scene {
         });
 
 
-        this.input.keyboard.on("keydown", (event) => {
+        this.input.keyboard!.on("keydown", (event) => {
             if (!isNaN(event.key)) {  // Check if the key is a number
                 console.log(`Key pressed: ${event.key}`);
                 if(event.key <= 5) {
-                    this.add.image(500, 500, `assets/cam${event.key}.png`);
+                    this.scene.start(`Camera${event.key}Scene`)
                 }
-                else {
+                else if(event.key >= 5) {
                     console.log("there is no more cams")
                 }
             }

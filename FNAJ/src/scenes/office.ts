@@ -6,13 +6,12 @@ export class OfficeScene extends Phaser.Scene {
 
     constructor() {
         super({ key: "OfficeScene" });
-
-        this.registry.set("GameState", new GameState());
-        this.state = this.registry.get("GameState");
     }
 
     preload() {
-        this.load.image("officeBg", "assets/office.png"); 
+        this.load.image("officeBg", "assets/office.png");
+        this.registry.set("GameState", new GameState());
+        this.state = this.registry.get("GameState"); 
     }
 
     create() {
@@ -23,7 +22,7 @@ export class OfficeScene extends Phaser.Scene {
 
         this.add.text(100, 100, "Office View - Press C to Check Cameras", { fontSize: "20px", color: "#fff" });
 
-        this.input.keyboard.once("keydown-C", () => {
+        this.input.keyboard!.once("keydown-C", () => {
             this.scene.start("CameraScene");
         });
     }
