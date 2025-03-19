@@ -31,8 +31,8 @@ export class CameraScene extends Phaser.Scene {
 
 
         this.input.keyboard!.on("keydown", (event) => {
-            if (!isNaN(event.key)) {  // Check if the key is a number
-                console.log(`Key pressed: ${event.key}`);
+            console.log(event.key)
+            if (event.key) {  // Check if the key is a number
                 if(event.key <= 5) {
                     this.scene.start(`Camera${event.key}Scene`)
                 }
