@@ -6,12 +6,16 @@ export class OfficeScene extends Phaser.Scene {
 
     constructor() {
         super({ key: "OfficeScene" });
+
     }
 
     preload() {
-        this.load.image("officeBg", "assets/office.png");
         this.registry.set("GameState", new GameState());
-        this.state = this.registry.get("GameState"); 
+        this.state = this.registry.get("GameState");
+
+
+    preload() {
+        this.load.image("officeBg", "assets/office.png"); 
     }
 
     create() {

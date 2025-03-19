@@ -115,7 +115,7 @@ Spel logic bla annat,
 van er olika fienderna och hur mucki ström har do
 */
 export default class GameState {
-    cameras: object;
+    cameras: Array<object>;
     enemies: object;
 
     /* Är dörran stängd eller öppin, lamporna av eller på
@@ -155,9 +155,7 @@ export default class GameState {
             }
         }
 
-        this.cameras = {
-
-        }
+        this.cameras = [];
 
         
         /*

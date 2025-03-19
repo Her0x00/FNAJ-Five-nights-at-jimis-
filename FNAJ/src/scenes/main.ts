@@ -11,5 +11,8 @@ export class MainScene extends Phaser.Scene {
         this.input.keyboard!.once("keydown-SPACE", () => {
             this.scene.start("OfficeScene");
         });
+
+        /* dehe ska bort tagas seinari ja använder he ba för att test na */
+        this.scene.start("CameraScene");
     }
 }

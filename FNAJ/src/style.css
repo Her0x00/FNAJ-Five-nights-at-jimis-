@@ -12,3 +12,12 @@
   justify-content: center;
   align-items: center;
 }
+
+@font-face {
+  font-family: 'fnaf';
+  src: url('assets/fonts/LcdSolid.ttf') format('truetype');
+}
+
+p {
+  font-family: fnaf;
+}
