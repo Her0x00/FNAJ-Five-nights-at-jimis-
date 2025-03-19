@@ -14,6 +14,7 @@ export class OfficeScene extends Phaser.Scene {
         this.state = this.registry.get("GameState");
 
 
+    preload() {
         this.load.image("officeBg", "assets/office.png"); 
     }
 
@@ -25,7 +26,7 @@ export class OfficeScene extends Phaser.Scene {
 
         this.add.text(100, 100, "Office View - Press C to Check Cameras", { fontSize: "20px", color: "#fff" });
 
-        this.input.keyboard.once("keydown-C", () => {
+        this.input.keyboard!.once("keydown-C", () => {
             this.scene.start("CameraScene");
         });
     }
