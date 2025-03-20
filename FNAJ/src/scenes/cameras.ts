@@ -99,6 +99,21 @@ export class CameraScene extends Phaser.Scene {
 
     changeCam(index: number) {
         console.log(index);
+        if(index == 1){
+            this.scene.start("Camera1Scene")
+        }
+        if(index == 2){
+            this.scene.start("Camera2Scene")
+        }
+        if(index == 3){
+            this.scene.start("Camera3Scene")
+        }
+        if(index == 4){
+            this.scene.start("Camera4Scene")
+        }
+        if(index == 5){
+            this.scene.start("Camera5Scene")
+        }
     }
 
     update(time: number, delta: number): void {
