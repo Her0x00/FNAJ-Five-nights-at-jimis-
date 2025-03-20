@@ -117,6 +117,6 @@ export class CameraScene extends Phaser.Scene {
     }
 
     update(time: number, delta: number): void {
-        
+        this.state?.tick(delta);
     }
 }

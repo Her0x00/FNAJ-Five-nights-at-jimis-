@@ -1,5 +1,3 @@
-
-
 /* Enemy
  *
  * Varje motståndar följer en specifik path åv kameror, dem kan ga framåt backåt eller skip
@@ -15,20 +13,27 @@ const ENEMY_MAX_DIFFICULTY: number = 20;
 
 export class Enemy {
     AttackPath: object;
-    AttackState: object;
+
+    AttackState: number; // Var är dem
+
+    
+    Attacking: boolean = false; //dem väntar på att du ska ta ner cams för att 🍇 de
+    AtDoor: boolean = false; // är en animatronic breivi dörren elo it
 
     Difficulty: number;
 
     AttackInterval: number;
     AttackTimer: number;
 
+    /* om dem blir stalled så dem far it till första attack stage
+       utan dem bara väntar tills du slutar stall de för att fortsätt vidari
+    */
+    stalled: boolean = false;
     CanAttack: boolean;
     
     constructor(AttackInterval: number) {
         this.AttackPath = [];
-        this.AttackState = {
-            PathIndex: 0,
-        };
+        this.AttackState = 0;
 
         this.AttackInterval = AttackInterval;
         this.AttackTimer = 0;
@@ -43,67 +48,130 @@ export class Enemy {
     /* Enemy spel logic som körs furi movement check som 
      * t.ex om du kollar på kameran dem är på så buri dem edge elo na 
     */
-    Update() {}
+    Update(resources: object) {}
 
     tick(deltatime: number) {
+        this.Update();
+
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
             if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) && this.CanAttack) {
-                this.AttackSuccess();
+                this.MoveSuccess(); // varje animatronic måst nan manuelt kod hur dem flyttar se
             } else {
-                this.AttackFailure();
+                this.MoveFailure();
             }
 
         }
     }
 
     /* Enemy flyttar se */
-    AttackSuccess() {}
+    MoveSuccess() {}
     
     /* Enemy failar sin movement check, så dem idk ökar sin difficulty inställning eller na idk */
-    AttackFailure() {}
+    MoveFailure() {}
 }
 
 
 /* her ti änder på logic vart ett man hittar på na typ */
-class Enemy1 extends Enemy {
+class Bonnie extends Enemy {
     constructor() {
         super(5);
         
         this.SetDifficulty(4);
 
 
-        /* test rut*/
-        this.AttackPath = [
-            {
-                position: "cam1",
-                recallChance: 0,
-            },
-            {
-                position: "cam2",
-                recallChance: 0.05,
-            },
-            {
-                position: "cam3",
-                recallChance: 0.10,
-            },
-            {
-                position: "cam4",
-                recallChance: 0.50
-            }
-        ]
+        /*
+        Borda vara samma AI som används i orginala speli,
+        btw path 12 är office window 13 är han är i office e.g spelarn blir 🍇'ed
+        */
+        this.AttackPath =  {
+                0: [
+                    {path: 1, odds: 0.70},
+                    {path: 8, odds: 0.30}
+                ],
+
+
+                1: [
+                    {path: 8, odds: 0.60},
+                    {path: 3, odds: 0.40}
+                ],
+
+                8: [
+                    {path: 1, odds: 0.60},
+                    {path: 3, odds: 0.40}
+                ],
+
+                3: [
+                    {path: 4, odds: 0.70},
+                    {path: 5, odds: 0.30},
+                ],
+
+                4: [
+                    {path: 12, odds: 0.80}, // om bonnie blir cockblocked far han ti baks ti cam 1 nästa movement chans
+                    {path: 5, odds: 0.20}
+                ],
+
+                5: [
+                    {path: 3, odds: 0.70},
+                    {path: 13, odds: 0.30} // lil chans att han 🍇 ein entå
+                ],
+
+
+        }
+
+        this.AttackState = 0; // stage
     }
 
-    Update(): void {
+    Update(resources: object): void {
+        console.log(this.AttackState);
+        if (this.Attacking) {
+            console.log("DEAD");
+        }
+
+
+        if (this.AttackState == 12) {
+            if (resources.doors.left.open) {
+                this.CanAttack = false;
+            }
+
+            if (resources.doors.left.lightsOn) {
+                this.stalled = true;
+            }
+        }
         
     }
 
-    AttackSuccess(): void {
+    MoveSuccess(): void {
+        switch(this.AttackState) {
+            case 12: // han er vi dörren
+                if (this.CanAttack && !this.stalled) { // dörren it er stänged
+                    this.AtDoor = false;
+                    this.AttackState = 13;
+                    this.Attacking = true;
+                }
 
+                if (!this.CanAttack && !this.stalled) { // the door is blocked, move back to diner
+                    this.AttackState = 1;
+                }
+
+                break;
+
+
+            default:
+
+                // uuh ja tror dehe borda funk ?
+                let path = this.AttackPath[this.AttackState];
+                if (Math.random() >= path[0].odds) {
+                    this.AttackState = path[0].path
+                } else {
+                    this.AttackState = path[1].path;
+                }
+
+        }
     }
 
-    AttackFailure(): void {
+    MoveFailure(): void {
         
     }
 }
@@ -116,7 +184,7 @@ van er olika fienderna och hur mucki ström har do
 */
 export default class GameState {
     cameras: Array<object>;
-    enemies: object;
+    enemies: Array<Enemy>;
 
     /* Är dörran stängd eller öppin, lamporna av eller på
     * Hur mucki ström finns ikvar, hu mucki ström används just nu,
@@ -141,11 +209,14 @@ export default class GameState {
                 left: {
                     open: true,
                     lightsOn: false,
+                    empty: true // bonnie är han ända som kan vara jär
                 },
 
                 right: {
                     open: true,
-                    lightsOn: false
+                    lightsOn: false,
+                    empty: true // högra dörren i spelli så kan bara chika kåll på de igenom,
+                    //  dehenan variabeln er mest bara för att simpliföser rendering
                 }
             },
 
@@ -164,12 +235,17 @@ export default class GameState {
 
 
         this.enemies = [
-
+            new Bonnie,
         ]
     }
 
     // blir påkalla varje frame inuti update function på i scenen
     tick(deltatime: number) {
         this.deltatime = deltatime;
+        console.log("tick");
+
+        for (let i = 0; i < this.enemies.length; i++) {
+            this.enemies[i].Update();
+        }
     }
 };
