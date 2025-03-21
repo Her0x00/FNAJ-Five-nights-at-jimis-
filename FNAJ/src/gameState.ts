@@ -52,16 +52,22 @@ export class Enemy {
 
     tick(deltatime: number) {
         this.Update();
-
+        //console.log(`tick(${deltatime})`);
+        console.log("attacktimer: " + this.AttackTimer);
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
+            console.log()
             if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) && this.CanAttack) {
+                console.log("MoveSucess()");
                 this.MoveSuccess(); // varje animatronic måst nan manuelt kod hur dem flyttar se
             } else {
+                console.log("MoveFailure()");
                 this.MoveFailure();
             }
 
+            console.log("attackState after movement:", )
+            this.AttackTimer = 0;
         }
     }
 
@@ -124,7 +130,6 @@ class Bonnie extends Enemy {
     }
 
     Update(resources: object): void {
-        console.log(this.AttackState);
         if (this.Attacking) {
             console.log("DEAD");
         }
@@ -162,6 +167,8 @@ class Bonnie extends Enemy {
 
                 // uuh ja tror dehe borda funk ?
                 let path = this.AttackPath[this.AttackState];
+                console.log(path);
+                console.log()
                 if (Math.random() >= path[0].odds) {
                     this.AttackState = path[0].path
                 } else {
@@ -242,10 +249,9 @@ export default class GameState {
     // blir påkalla varje frame inuti update function på i scenen
     tick(deltatime: number) {
         this.deltatime = deltatime;
-        console.log("tick");
 
         for (let i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].Update();
+            this.enemies[i].tick(deltatime);
         }
     }
 };
