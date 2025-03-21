@@ -30,7 +30,7 @@ export class Enemy {
        utan dem bara väntar tills du slutar stall de för att fortsätt vidari
     */
     stalled: boolean = false;
-    CanAttack: boolean;
+    CanAttack: boolean = true;
     
     constructor(AttackInterval: number) {
         this.AttackPath = [];
@@ -52,14 +52,18 @@ export class Enemy {
     Update(resources: object) {}
 
     tick(deltatime: number) {
-        this.Update();
-        //console.log(`tick(${deltatime})`);
-        //console.log("attacktimer: " + this.AttackTimer);
+
+
+        console.log("attacktimer: " + this.AttackTimer);
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
-            console.log()
-            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) >= this.Difficulty && this.CanAttack) {
+            
+            
+            console.log("movement check");
+
+            this.Update();
+            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) <= this.Difficulty && this.CanAttack && !this.Attacking) {
                 console.log("MoveSucess()");
                 this.MoveSuccess(); // varje animatronic måst nan manuelt kod hur dem flyttar se
             } else {
@@ -87,7 +91,7 @@ class Bonnie extends Enemy {
         
         this.name = "Bonnie";
 
-        this.SetDifficulty(4);
+        this.SetDifficulty(20);
 
 
         /*
@@ -133,6 +137,7 @@ class Bonnie extends Enemy {
     }
 
     Update(resources: object): void {
+        console.log("Update");
         if (this.Attacking) {
             console.log("DEAD");
         }
@@ -157,6 +162,9 @@ class Bonnie extends Enemy {
                     this.AtDoor = false;
                     this.AttackState = 13;
                     this.Attacking = true;
+                    
+                    console.log("here");
+                    return ;
                 }
 
                 if (!this.CanAttack && !this.stalled) { // the door is blocked, move back to diner
@@ -165,13 +173,18 @@ class Bonnie extends Enemy {
 
                 break;
 
+            case 13:
+                return;
 
             default:
 
                 // uuh ja tror dehe borda funk ?
                 let path = this.AttackPath[this.AttackState];
                 console.log(path);
-                console.log()
+                console.log(this.AttackState)
+
+
+
                 if (Math.random() >= path[0].odds) {
                     this.AttackState = path[0].path
                 } else {
