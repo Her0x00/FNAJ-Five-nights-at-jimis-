@@ -12,10 +12,11 @@
 const ENEMY_MAX_DIFFICULTY: number = 20;
 
 export class Enemy {
+    name: string = "";
+    
     AttackPath: object;
 
     AttackState: number; // Var är dem
-
     
     Attacking: boolean = false; //dem väntar på att du ska ta ner cams för att 🍇 de
     AtDoor: boolean = false; // är en animatronic breivi dörren elo it
@@ -53,12 +54,12 @@ export class Enemy {
     tick(deltatime: number) {
         this.Update();
         //console.log(`tick(${deltatime})`);
-        console.log("attacktimer: " + this.AttackTimer);
+        //console.log("attacktimer: " + this.AttackTimer);
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
             console.log()
-            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) && this.CanAttack) {
+            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) >= this.Difficulty && this.CanAttack) {
                 console.log("MoveSucess()");
                 this.MoveSuccess(); // varje animatronic måst nan manuelt kod hur dem flyttar se
             } else {
@@ -66,7 +67,7 @@ export class Enemy {
                 this.MoveFailure();
             }
 
-            console.log("attackState after movement:", )
+            console.log("attackState after movement:", this.AttackState);
             this.AttackTimer = 0;
         }
     }
@@ -84,6 +85,8 @@ class Bonnie extends Enemy {
     constructor() {
         super(5);
         
+        this.name = "Bonnie";
+
         this.SetDifficulty(4);
 
 

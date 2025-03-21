@@ -9,30 +9,47 @@ export class CameraScene extends Phaser.Scene {
     state?: GameState;
     CameraPos: Array<pos>;
 
-    
     MapOverlay?: Phaser.GameObjects.Image;
 
     CameraSizeButtonW: number = 50;
     CameraSizeButtonH: number = 25;
+
+    activeCamera: number = 0;
+
+    CameraImage?: Phaser.GameObjects.Image;
+    
+    TVstatic: Phaser.GameObjects.Image;
     
     constructor() {
         super({ key: "CameraScene" });
     
         this.CameraPos = [];
-
     }
 
     preload() {
         this.load.image("cameraOverlay", "assets/cameraOverlay.png");
 
-        this.load.image("cam1", "assets/cam1.png");
-        this.load.image("cam2", "assets/cam2.png");
-        this.load.image("cam3", "assets/cam3.png");
-        this.load.image("cam4", "assets/cam4.png");
-        this.load.image("cam5", "assets/cam5.png");
+        this.load.image("cam1", "assets/Cameras/1-STAGE.png");
+        this.load.image("cam1-all", "assets/Cameras/1-STAGE_ALL.png");
+        this.load.image("cam1-bonnie", "assets/Cameras/1-STAGE_BONNIE.png");
+
+        this.load.image("cam2", "assets/Cameras/2-DINING_AREA.png");
+        this.load.image("cam2-bonnie-pos1", "assets/Cameras/2-DINING_AREA_BONNIE.png");
+        this.load.image("cam2-bonnie-pos2", "assets/Cameras/2-DINING_AREA_BONNIE_2.0.png");
+        
 
         this.load.image("ButtonBG", "assets/CameraButtonBG.png");
 
+        this.load.image('static1', 'assets/static/1.png');
+        this.load.image('static2', 'assets/static/2.png');
+        this.load.image('static3', 'assets/static/3.png');
+        this.load.image('static4', 'assets/static/4.png');
+        this.load.image('static5', 'assets/static/5.png');
+        this.load.image('static6', 'assets/static/6.png');
+        this.load.image('static7', 'assets/static/7.png');
+
+        this.load.image("WhiteBar1", "FNAJ/public/assets/Camerasx/whiteBars/1.png");
+        
         this.state = this.registry.get("GameState");
 
 
@@ -56,6 +73,28 @@ export class CameraScene extends Phaser.Scene {
     }
 
     create() {
+        
+        this.anims.create({
+            key: 'staticAnim',
+            frames: [
+                { key: 'static1' },
+                { key: 'static2' },
+                { key: 'static3' },
+                { key: 'static4' },
+                { key: 'static5' },
+                { key: 'static6' },
+                { key: 'static7' }
+            ],
+            frameRate: 30, // Adjust for speed
+            repeat: -1 // Infinite loop
+        });
+
+        this.TVstatic = this.add.sprite(800, 450, "static1").setDepth(1).setScale(1.25).setAlpha(0.5);
+        this.TVstatic.play("staticAnim");
+
+        this.TVstatic.setBlendMode(Phaser.BlendModes.SCREEN);
+        
+
         this.add.text(100, 100, " Camera View - Press X to Return", {  fontFamily: 'fnaf', fontSize: "20px", color: "#fff" });
         
         /* Place holder
@@ -63,7 +102,7 @@ export class CameraScene extends Phaser.Scene {
         */
         //this.add.text(100, 150   , "Click (1, 2, 3, 4, 5) to choose camera", { fontSize: "20px", color: "#fff"})
         
-        this.MapOverlay = this.add.image(1200, 650 , "cameraOverlay").setScale(1.2);
+        this.MapOverlay = this.add.image(1200, 650 , "cameraOverlay").setScale(1.2).setDepth(2).setTint(0xffffff);
 
         this.input.keyboard!.on(`keydown-X`, () => {
             this.scene.start("OfficeScene");
@@ -75,16 +114,17 @@ export class CameraScene extends Phaser.Scene {
                     this.add.sprite(
                         this.CameraPos[i].x,
                         this.CameraPos[i].y,
-                        "ButtonBG").setScale(0.89, 1).setInteractive().on("pointerdown", () => { this.changeCam(i)}),
+                        "ButtonBG").setScale(0.89, 1).setDepth(3).setInteractive().on("pointerdown", () => { this.changeCam(i)}),
                 
                 buttonText: 
                     this.add.text(
                         this.CameraPos[i].x - 20,
                         this.CameraPos[i].y - 15,
-                        `CAM\n${i}`, {  fontFamily: 'fnaf', fontWeight: 'bolder', fontSize: "20px", color: "#fff" })
+                        `CAM\n${i}`, {  fontFamily: 'fnaf', fontWeight: 'bolder', fontSize: "20px", color: "#fff" }).setDepth(4)
                         
             })
 
+            this.changeCam(0);
         }
 
         
@@ -98,21 +138,98 @@ export class CameraScene extends Phaser.Scene {
 
 
     changeCam(index: number) {
-        console.log(index);
-        if(index == 1){
-            this.scene.start("Camera1Scene")
+        if (this.activeCamera != index) {
+            this.activeCamera = index;
+        
+            this.RenderCam();
         }
-        if(index == 2){
-            this.scene.start("Camera2Scene")
+    }
+
+    AddCamImg(path: string) {
+        let scale = 900 / 720;
+
+        let w = 1600 * scale; // 2k px
+        let h = 900;
+
+        this.CameraImage?.destroy();
+        this.CameraImage = this.add.image(w / 2, h / 2 , path).setScale(scale).setDepth(0);
+
+        this.tweens.add({
+            targets: this.CameraImage,  // The image to move
+            x: 600,                // Move to X = 600
+            duration: 5000,        // Move over 5 seconds
+            yoyo: true,            // Move back to start
+            repeat: -1,            // Loop forever
+            ease: 'Linear'     // Smooth easing
+        });
+    }
+
+    // vis animatronics som finns på varje kamera
+    RenderCam() {
+        console.log(`rendercam ${this.activeCamera}`);
+        let AnimatronicsPresent = [];
+
+        for (let i = 0; i < this.state?.enemies.length; i++) {
+            if (this.state?.enemies[i].AttackState == this.activeCamera) {
+                AnimatronicsPresent.push(this.state.enemies[i].name);
+            }
         }
-        if(index == 3){
-            this.scene.start("Camera3Scene")
-        }
-        if(index == 4){
-            this.scene.start("Camera4Scene")
-        }
-        if(index == 5){
-            this.scene.start("Camera5Scene")
+
+
+        // Poopy dookey men her snabb att släng ihop
+        // Basically ba hit rätt bild att lägg på rätt cam
+        // varje bild har samma upplösning av 1600x720 så man skalar upp an sedan så flyttar
+        // man bilding vänster sedan höger för att repliker spelis cctv cameror som flyttar automatiskt
+
+        // btw speli använder en 7 frame statisk svart och vit animation med va jag antar är en chroma key effekt
+        // elo na för att göra he meir animera ig å så he sir bättre ut som man kan add seinari
+        
+        let scale = 900 / 720;
+
+        let w = 1600 * scale; // 2k px
+        let h = 900;
+
+        switch(this.activeCamera) {
+            case 0:
+
+                this.AddCamImg("cam1");
+                
+                break;
+            case 1:
+
+                this.AddCamImg("cam2")
+                break;
+
+            case 2:
+                break;
+            
+            case 3:
+                break;
+            case 4:
+                break;
+    
+            case 5:
+                break;
+        
+        
+            case 6:
+                break;
+            case 7:
+                break;
+
+            case 8:
+                break;
+            
+            case 9:
+
+                break;
+            case 10:
+                
+                break;
+    
+            case 11:
+
+                break;
         }
     }
 

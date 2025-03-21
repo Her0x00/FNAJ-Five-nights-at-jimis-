@@ -27,6 +27,8 @@ export class OfficeScene extends Phaser.Scene {
         this.input.keyboard!.once("keydown-C", () => {
             this.scene.start("CameraScene");
         });
+
+        // koll om bonnie eller nain ader väntar på att du ska lägg ner kamera för att grape ein
     }
 
     update(time: number, delta: number): void {
