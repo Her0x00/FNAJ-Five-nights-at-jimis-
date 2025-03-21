@@ -18,6 +18,19 @@ export class OfficeScene extends Phaser.Scene {
 
         this.load.image("officeBg", "assets/office.png"); 
         //this.load.image("button", "assets/button.png"); // Load button image
+    
+        this.load.image("MonitorAnim1", "assets/monitorAnimation/1.png");
+        this.load.image("MonitorAnim2", "assets/monitorAnimation/2.png");
+        this.load.image("MonitorAnim3", "assets/monitorAnimation/3.png");
+        this.load.image("MonitorAnim4", "assets/monitorAnimation/4.png");
+        this.load.image("MonitorAnim5", "assets/monitorAnimation/5.png");
+        this.load.image("MonitorAnim6", "assets/monitorAnimation/6.png");
+        this.load.image("MonitorAnim7", "assets/monitorAnimation/7.png");
+        this.load.image("MonitorAnim8", "assets/monitorAnimation/8.png");
+        this.load.image("MonitorAnim9", "assets/monitorAnimation/9.png");
+        this.load.image("MonitorAnim10", "assets/monitorAnimation/10.png");
+        this.load.image("MonitorAnim11", "assets/monitorAnimation/11.png"); 
+   
     }
 
     create() {
