@@ -231,6 +231,9 @@ export class CameraScene extends Phaser.Scene {
 
                 break;
         }
+        if(index == 10){
+            this.scene.start("Camera10Scene")
+        }
     }
 
     update(time: number, delta: number): void {
