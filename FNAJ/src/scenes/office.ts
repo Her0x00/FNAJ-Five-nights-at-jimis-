@@ -84,7 +84,7 @@ export class OfficeScene extends Phaser.Scene {
     
 
         // koll om bonnie eller nain ader väntar på att du ska lägg ner kamera för att grape ein
-    }
+    
 
     update(time: number, delta: number): void {
         this.state.tick(delta);

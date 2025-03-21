@@ -18,7 +18,9 @@ export class CameraScene extends Phaser.Scene {
 
     CameraImage?: Phaser.GameObjects.Image;
     
-    TVstatic: Phaser.GameObjects.Image;
+    TVstatic?: Phaser.GameObjects.Image;
+    
+    WhiteBars?: Phaser.GameObjects.Image;
     
     constructor() {
         super({ key: "CameraScene" });
@@ -48,7 +50,13 @@ export class CameraScene extends Phaser.Scene {
         this.load.image('static6', 'assets/static/6.png');
         this.load.image('static7', 'assets/static/7.png');
 
-        this.load.image("WhiteBar1", "FNAJ/public/assets/Camerasx/whiteBars/1.png");
+        this.load.image("WhiteBar1", "assets/Cameras/whiteBars/1.png");
+        this.load.image("WhiteBar2", "assets/Cameras/whiteBars/2.png");
+        this.load.image("WhiteBar3", "assets/Cameras/whiteBars/3.png");
+        this.load.image("WhiteBar4", "assets/Cameras/whiteBars/4.png");
+        this.load.image("WhiteBar5", "assets/Cameras/whiteBars/5.png");
+        this.load.image("WhiteBar6", "assets/Cameras/whiteBars/6.png");
+        this.load.image("WhiteBar7", "assets/Cameras/whiteBars/7.png");
         
         this.state = this.registry.get("GameState");
 
@@ -88,12 +96,24 @@ export class CameraScene extends Phaser.Scene {
             frameRate: 30, // Adjust for speed
             repeat: -1 // Infinite loop
         });
-
-        this.TVstatic = this.add.sprite(800, 450, "static1").setDepth(1).setScale(1.25).setAlpha(0.5);
-        this.TVstatic.play("staticAnim");
-
-        this.TVstatic.setBlendMode(Phaser.BlendModes.SCREEN);
         
+        this.InitStatic();
+
+        this.anims.create({
+            key: 'WhiteBarAnim',
+            frames: [
+                { key: 'WhiteBar1' },
+                { key: 'WhiteBar2' },
+                { key: 'WhiteBar3' },
+                { key: 'WhiteBar4' },
+                { key: 'WhiteBar5' },
+                { key: 'WhiteBar6' },
+                { key: 'WhiteBar7' }
+            ],
+            frameRate: 30,
+            repeat: 0
+        });
+
 
         this.add.text(100, 100, " Camera View - Press X to Return", {  fontFamily: 'fnaf', fontSize: "20px", color: "#fff" });
         
@@ -136,6 +156,22 @@ export class CameraScene extends Phaser.Scene {
         // }
     }
 
+    InitStatic() {
+        this.TVstatic = this.add.sprite(800, 450, "static1").setDepth(1).setScale(1.25).setAlpha(0.5);
+        this.TVstatic.play("staticAnim");
+
+        this.TVstatic.setBlendMode(Phaser.BlendModes.SCREEN);
+    }
+
+    CamChangeWhiteBarAnim() {
+        this.WhiteBars = this.add.sprite(800, 450, 'WhiteBarAnim').setScale(1.25); 
+        this.WhiteBars.play('WhiteBarAnim');
+        this.WhiteBars.setBlendMode(Phaser.BlendModes.SCREEN);
+
+        this.WhiteBars.on('animationcomplete', () => {
+            this.WhiteBars.destroy();
+        });
+    }
 
     changeCam(index: number) {
         if (this.activeCamera != index) {
@@ -143,6 +179,8 @@ export class CameraScene extends Phaser.Scene {
         
             this.RenderCam();
         }
+
+        this.CamChangeWhiteBarAnim();
     }
 
     AddCamImg(path: string) {
@@ -230,9 +268,6 @@ export class CameraScene extends Phaser.Scene {
             case 11:
 
                 break;
-        }
-        if(index == 10){
-            this.scene.start("Camera10Scene")
         }
     }
 
