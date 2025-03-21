@@ -77,12 +77,26 @@ export class OfficeScene extends Phaser.Scene {
         });
         const { width, height } = this.scale;
 
+        // Adjust the width of the office scene (for example, make it 50% wider)
+        const newWidth = width * 1.2;
+
         // Background
-        this.add.image(width / 2, height / 2, "officeBg")
+        const officeBg = this.add.image(newWidth / 2, height / 2, "officeBg")
             .setOrigin(0.5, 0.5)
-            .setDisplaySize(width, height);
+            .setDisplaySize(newWidth, height);
 
         this.add.text(100, 100, "Office View - Press C to Check Cameras", { fontSize: "20px", color: "#fff" });
+
+
+            //gör så att bakgrunding far fram å tibak som i dömde ader cams
+        this.tweens.add({
+            targets: officeBg,
+            x: { from: width / 2 - 120, to: width / 2 + 120 }, // far 100px från höge ti vänste
+            duration: 3500, // tidn 
+            ease: "Sine.easeInOut", // Smooth movement
+            yoyo: true, // far framåtibak
+            repeat: -1 // Loop forever
+        });
 
         this.input.keyboard!.once("keydown-C", () => {
             this.OpenCams();
@@ -151,7 +165,7 @@ export class OfficeScene extends Phaser.Scene {
     
         this.tweens.add({
             targets: door,
-            y: doorClosed ? 0 : this.scale.height - 10, // Moves down further when closing
+            y: doorClosed ? 0 : -this.scale.height + 10, // Moves down further when closing
             duration: 500,
             ease: "Power2"
         });
@@ -171,5 +185,6 @@ export class OfficeScene extends Phaser.Scene {
 
     update(time: number, delta: number): void {
         this.state.tick(delta);
+        
     }
 }
