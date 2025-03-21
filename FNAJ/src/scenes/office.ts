@@ -17,7 +17,7 @@ export class OfficeScene extends Phaser.Scene {
         this.state = this.registry.get("GameState");
 
         this.load.image("officeBg", "assets/office.png"); 
-        this.load.image("button", "assets/button.png"); // Load button image
+        //this.load.image("button", "assets/button.png"); // Load button image
     }
 
     create() {

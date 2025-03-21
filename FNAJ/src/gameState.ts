@@ -52,14 +52,18 @@ export class Enemy {
     Update(resources: object) {}
 
     tick(deltatime: number) {
-        this.Update();
-        //console.log(`tick(${deltatime})`);
-        //console.log("attacktimer: " + this.AttackTimer);
+
+
+        console.log("attacktimer: " + this.AttackTimer);
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
-            console.log()
-            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) >= this.Difficulty && this.CanAttack && !this.Attacking) {
+            
+            
+            console.log("movement check");
+
+            this.Update();
+            if (Math.floor(Math.random() * ENEMY_MAX_DIFFICULTY) <= this.Difficulty && this.CanAttack && !this.Attacking) {
                 console.log("MoveSucess()");
                 this.MoveSuccess(); // varje animatronic måst nan manuelt kod hur dem flyttar se
             } else {
@@ -83,11 +87,11 @@ export class Enemy {
 /* her ti änder på logic vart ett man hittar på na typ */
 class Bonnie extends Enemy {
     constructor() {
-        super(20);
+        super(5);
         
         this.name = "Bonnie";
 
-        this.SetDifficulty(4);
+        this.SetDifficulty(20);
 
 
         /*
