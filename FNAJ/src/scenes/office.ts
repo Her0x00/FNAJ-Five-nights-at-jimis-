@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import GameState from "../gameState";
 
 export class OfficeScene extends Phaser.Scene {
-    state: GameState;
+    state?: GameState;
     leftDoor!: Phaser.GameObjects.Rectangle;  // Left door
     rightDoor!: Phaser.GameObjects.Rectangle; // Right door
     leftDoorClosed: boolean = false;  
@@ -19,6 +19,9 @@ export class OfficeScene extends Phaser.Scene {
         this.load.image("officeBg", "assets/office.png"); 
         //this.load.image("button", "assets/button.png"); // Load button image
     
+
+        /* Ja veit att dehär er highkey dumb asf men ja orkar it kma på na annat 
+        */
         this.load.image("MonitorAnim1", "assets/monitorAnimation/1.png");
         this.load.image("MonitorAnim2", "assets/monitorAnimation/2.png");
         this.load.image("MonitorAnim3", "assets/monitorAnimation/3.png");
@@ -30,10 +33,48 @@ export class OfficeScene extends Phaser.Scene {
         this.load.image("MonitorAnim9", "assets/monitorAnimation/9.png");
         this.load.image("MonitorAnim10", "assets/monitorAnimation/10.png");
         this.load.image("MonitorAnim11", "assets/monitorAnimation/11.png"); 
-   
+
     }
+    
 
     create() {
+        this.anims.create({
+            key: "OpenMonitor",
+            frames: [
+                { key: 'MonitorAnim1' },
+                { key: 'MonitorAnim2' },
+                { key: 'MonitorAnim3' },
+                { key: 'MonitorAnim4' },
+                { key: 'MonitorAnim5' },
+                { key: 'MonitorAnim6' },
+                { key: 'MonitorAnim7' },
+                { key: 'MonitorAnim8' },
+                { key: 'MonitorAnim9' },
+                { key: 'MonitorAnim10' },
+                { key: 'MonitorAnim11' },
+            ],
+            frameRate: 30,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "CloseMonitor",
+            frames: [
+                { key: 'MonitorAnim11' },
+                { key: 'MonitorAnim10' },
+                { key: 'MonitorAnim9' },
+                { key: 'MonitorAnim8' },
+                { key: 'MonitorAnim7' },
+                { key: 'MonitorAnim6' },
+                { key: 'MonitorAnim5' },
+                { key: 'MonitorAnim4' },
+                { key: 'MonitorAnim3' },
+                { key: 'MonitorAnim2' },
+                { key: 'MonitorAnim1' },
+            ],
+            frameRate: 30,
+            repeat: 0
+        });
         const { width, height } = this.scale;
 
         // Background
@@ -44,7 +85,7 @@ export class OfficeScene extends Phaser.Scene {
         this.add.text(100, 100, "Office View - Press C to Check Cameras", { fontSize: "20px", color: "#fff" });
 
         this.input.keyboard!.once("keydown-C", () => {
-            this.scene.start("CameraScene");
+            this.OpenCams();
         });
 
         // höger Door
@@ -73,7 +114,36 @@ export class OfficeScene extends Phaser.Scene {
         leftButton.on("pointerdown", () => {
             this.toggleDoor(this.leftDoor, "left");
         });
+
+        if (this.registry.get("init")) {
+            this.CloseCams();
+        }
+
+        this.registry.set("init", true);
     }
+
+    // lil animation me att man tar fram en ipad
+    OpenCams() {
+        const monitor = this.add.sprite(800, 450, 'OpenMonitor').setScale(1.25); 
+        monitor.play('OpenMonitor');
+        
+        monitor.on('animationcomplete', () => {
+            monitor.destroy();
+            this.scene.start("CameraScene");
+        });
+    }
+
+    // Kall function tå man komber tibaks from CameraScene scenen för att spel en lil animation tå
+    // Ipadin stängs
+    CloseCams() {
+        const monitor = this.add.sprite(800, 450, 'CloseMonitor').setScale(1.25); 
+        monitor.play('CloseMonitor');
+        
+        monitor.on('animationcomplete', () => {
+            monitor.destroy();
+        });
+    }
+
     //kod för att öpin dörra höger ele vänster (((thank you gpt )))
     toggleDoor(door: Phaser.GameObjects.Rectangle, side: "left" | "right") {
         const isRight = side === "right";
