@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import GameState from "../gameState";
 
 export class OfficeScene extends Phaser.Scene {
-    state: GameState;
+    state?: GameState;
     leftDoor!: Phaser.GameObjects.Rectangle;  // Left door
     rightDoor!: Phaser.GameObjects.Rectangle; // Right door
     leftDoorClosed: boolean = false;  
@@ -23,6 +23,9 @@ export class OfficeScene extends Phaser.Scene {
         this.load.image("officeBg", "assets/office/1-OFFICE.png"); 
         //this.load.image("button", "assets/button.png"); // Load button image
     
+
+        /* Ja veit att dehär er highkey dumb asf men ja orkar it kma på na annat 
+        */
         this.load.image("MonitorAnim1", "assets/monitorAnimation/1.png");
         this.load.image("MonitorAnim2", "assets/monitorAnimation/2.png");
         this.load.image("MonitorAnim3", "assets/monitorAnimation/3.png");
@@ -41,8 +44,46 @@ export class OfficeScene extends Phaser.Scene {
         this.load.image("OfficeLeftLight", "assets/office/LEFT_LIGHT.png")
         this.load.image("OfficeRightLight", "assets/office/RIGHT_LIGHT.png")
     }
+    
 
     create() {
+        this.anims.create({
+            key: "OpenMonitor",
+            frames: [
+                { key: 'MonitorAnim1' },
+                { key: 'MonitorAnim2' },
+                { key: 'MonitorAnim3' },
+                { key: 'MonitorAnim4' },
+                { key: 'MonitorAnim5' },
+                { key: 'MonitorAnim6' },
+                { key: 'MonitorAnim7' },
+                { key: 'MonitorAnim8' },
+                { key: 'MonitorAnim9' },
+                { key: 'MonitorAnim10' },
+                { key: 'MonitorAnim11' },
+            ],
+            frameRate: 30,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "CloseMonitor",
+            frames: [
+                { key: 'MonitorAnim11' },
+                { key: 'MonitorAnim10' },
+                { key: 'MonitorAnim9' },
+                { key: 'MonitorAnim8' },
+                { key: 'MonitorAnim7' },
+                { key: 'MonitorAnim6' },
+                { key: 'MonitorAnim5' },
+                { key: 'MonitorAnim4' },
+                { key: 'MonitorAnim3' },
+                { key: 'MonitorAnim2' },
+                { key: 'MonitorAnim1' },
+            ],
+            frameRate: 30,
+            repeat: 0
+        });
         const { width, height } = this.scale;
 
         // lagar imaging brejadri men fan jävla 250p)
@@ -64,7 +105,7 @@ export class OfficeScene extends Phaser.Scene {
         });
 
         this.input.keyboard!.once("keydown-C", () => {
-            this.scene.start("CameraScene");
+            this.OpenCams();
         });
 
         // höger Door
@@ -96,28 +137,7 @@ export class OfficeScene extends Phaser.Scene {
         leftButton.on("pointerdown", () => {
             this.toggleDoor(this.leftDoor, "left");
         });
-
-        //lights
-        const leftLightButton = this.add.image(400, height - 50, "button")
-            .setInteractive()
-            .setScale(5);
-        
-        leftLightButton.on("pointerdown", () => {
-            this.toggleLeftLight();
-        });
-
-        // Button to toggle the right light on/off
-        const rightLightButton = this.add.image(width - 200, height - 100, "button")
-            .setInteractive()
-            .setScale(5);
-        
-        rightLightButton.on("pointerdown", () => {
-            this.toggleRightLight();
-        });
     }
-
-
-
     //kod för att öpin dörra höger ele vänster (((thank you gpt )))
     toggleDoor(door: Phaser.GameObjects.Rectangle, side: "left" | "right") {
         const isRight = side === "right";

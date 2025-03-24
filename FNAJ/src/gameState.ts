@@ -54,7 +54,7 @@ export class Enemy {
     tick(deltatime: number) {
 
 
-        console.log("attacktimer: " + this.AttackTimer);
+        //console.log("attacktimer: " + this.AttackTimer);
         this.AttackTimer += (deltatime / 1000);
 
         if (this.AttackTimer >= this.AttackInterval) { // Försök flytt
@@ -219,6 +219,7 @@ export default class GameState {
     //används jär i GameState classin fö skit
     deltatime: number;
     
+
     constructor() {
         this.deltatime = 0;
 
