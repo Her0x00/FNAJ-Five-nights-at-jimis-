@@ -105,7 +105,7 @@ export class OfficeScene extends Phaser.Scene {
         });
 
         this.input.keyboard!.once("keydown-C", () => {
-            this.OpenCams();
+            this.scene.start("CameraScene");
         });
 
         // höger Door
